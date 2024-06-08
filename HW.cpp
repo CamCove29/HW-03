@@ -1,6 +1,5 @@
 #include <iostream>
 
-
 struct HashNode {
     int key;
     int value;
@@ -46,7 +45,7 @@ public:
                 return current->value;
             current = current->next;
         }
-        return -1; 
+        return -1; // Valor no encontrado
     }
 
     void remove(int key) {
@@ -79,5 +78,4 @@ public:
         delete[] table;
     }
 };
-
 
