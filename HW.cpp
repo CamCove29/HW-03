@@ -46,7 +46,7 @@ public:
                 return current->value;
             current = current->next;
         }
-        return -1; // Valor no encontrado
+        return -1; 
     }
 
     void remove(int key) {
