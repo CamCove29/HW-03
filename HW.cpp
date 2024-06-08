@@ -1,112 +1,83 @@
 #include <iostream>
-#include <vector>
-#include <list>
-#include <string>
 
-using namespace std;
 
-struct Node {
-    string key;
+struct HashNode {
+    int key;
     int value;
-    Node* next;
-
-    Node(string k, int v) : key(k), value(v), next(nullptr) {}
+    HashNode* next;
+    
+    HashNode(int k, int v) : key(k), value(v), next(nullptr) {}
 };
 
-class HashTable {
+class HashMap {
 private:
-    vector<Node*> table;
+    HashNode** table;
     int capacity;
-    int size;
 
-    int hashFunction(const string& key) {
-        int hash = 0;
-        for (char ch : key) {
-            hash = (hash * 31 + ch) % capacity;
-        }
-        return hash;
+    // Función de hash
+    int hashFunction(int key) {
+        return key % capacity;
     }
 
 public:
-    HashTable(int cap) : capacity(cap), size(0) {
-        table.resize(capacity, nullptr);
+    HashMap(int size = 10) : capacity(size) {
+        table = new HashNode*[capacity]();
     }
 
-    ~HashTable() {
-        for (Node* head : table) {
-            while (head) {
-                Node* temp = head;
-                head = head->next;
+    void insert(int key, int value) {
+        int index = hashFunction(key);
+        HashNode* newNode = new HashNode(key, value);
+        
+        if (!table[index]) {
+            table[index] = newNode;
+        } else {
+            HashNode* current = table[index];
+            while (current->next)
+                current = current->next;
+            current->next = newNode;
+        }
+    }
+
+    int get(int key) {
+        int index = hashFunction(key);
+        HashNode* current = table[index];
+        while (current) {
+            if (current->key == key)
+                return current->value;
+            current = current->next;
+        }
+        return -1; // Valor no encontrado
+    }
+
+    void remove(int key) {
+        int index = hashFunction(key);
+        HashNode* current = table[index];
+        HashNode* prev = nullptr;
+        while (current) {
+            if (current->key == key) {
+                if (!prev)
+                    table[index] = current->next;
+                else
+                    prev->next = current->next;
+                delete current;
+                return;
+            }
+            prev = current;
+            current = current->next;
+        }
+    }
+
+    ~HashMap() {
+        for (int i = 0; i < capacity; ++i) {
+            HashNode* current = table[i];
+            while (current) {
+                HashNode* temp = current;
+                current = current->next;
                 delete temp;
             }
         }
-    }
-
-    void insert(const string& key, int value) {
-        int index = hashFunction(key);
-
-        if (table[index] == nullptr) {
-            table[index] = new Node(key, value);
-        } else {
-            Node* head = table[index];
-            while (head->next) {
-                if (head->key == key) {
-                    head->value = value;
-                    return;
-                }
-                head = head->next;
-            }
-            if (head->key == key) {
-                head->value = value;
-            } else {
-                head->next = new Node(key, value);
-            }
-        }
-        size++;
-    }
-    int search(const string& key) {
-        int index = hashFunction(key);
-        Node* head = table[index];
-
-        while (head) {
-            if (head->key == key) {
-                return head->value;
-            }
-            head = head->next;
-        }
-
-        throw runtime_error("Clave no encontrada");
-    }
-
-    void remove(const string& key) {
-        int index = hashFunction(key);
-        Node* head = table[index];
-        Node* prev = nullptr;
-
-        while (head) {
-            if (head->key == key) {
-                if (prev == nullptr) {
-                    table[index] = head->next;
-                } else {
-                    prev->next = head->next;
-                }
-                delete head;
-                size--;
-                return;
-            }
-            prev = head;
-            head = head->next;
-        }
-
-        throw runtime_error("Clave no encontrada");
-    }
-
-    int getSize() {
-        return size;
-    }
-
-    bool isEmpty() {
-        return size == 0;
+        delete[] table;
     }
 };
+
 
