@@ -1,3 +1,3 @@
 # HW-03
 
-# Implementación la estructura Hash Table.
+## Implementación la estructura Hash Table.
