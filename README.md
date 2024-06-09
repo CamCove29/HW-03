@@ -2,7 +2,7 @@
 
 ## Implementación la estructura Hash Table.
 
-##Alumnos:
+Alumnos:
 - Camila Milagros Coveñas Rojas
 - Herbert Armando Chumbe Ñahui
 - Jesús Gadiel Velarde Tipte
