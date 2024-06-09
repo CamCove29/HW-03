@@ -1,3 +1,5 @@
+//PRIMERA FORMA DE IMPLEMENTACIÓN
+
 #include <iostream>
 #include <vector>
 #include <list>
